@@ -96,6 +96,9 @@ const CreateNew = (props) => {
   const author = useField('text');
   const info = useField('text');
 
+  // Separating (and renaming) the reset function from the rest of the input attributes
+  //  gets rid of the console error
+
   const { reset: resetContent, ...contentProps } = content;
   const { reset: resetAuthor, ...authorProps } = author;
   const { reset: resetInfo, ...infoProps } = info;
