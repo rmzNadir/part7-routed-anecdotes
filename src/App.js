@@ -7,15 +7,15 @@ const Menu = () => {
   };
   return (
     <div>
-      <a href='#' style={padding}>
+      <Link style={padding} to='/'>
         anecdotes
-      </a>
-      <a href='#' style={padding}>
+      </Link>
+      <Link style={padding} to='/create'>
         create new
-      </a>
-      <a href='#' style={padding}>
+      </Link>
+      <Link style={padding} to='/about'>
         about
-      </a>
+      </Link>
     </div>
   );
 };
@@ -158,16 +158,17 @@ const App = () => {
     //   <About />
 
     <Router>
+      <h1>Software anecdotes</h1>
+      <Menu />
       <Switch>
         <Route path='/create'>
           <CreateNew addNew={addNew} />
         </Route>
+        <Route path='/about'>
+          <About />
+        </Route>
         <Route path='/'>
-          <div>
-            <h1>Software anecdotes</h1>
-            <Menu />
-            <AnecdoteList anecdotes={anecdotes} />
-          </div>
+          <AnecdoteList anecdotes={anecdotes} />
         </Route>
       </Switch>
       <Footer />
