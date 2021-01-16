@@ -1,5 +1,11 @@
-import React, { useState } from 'react';
-import { Switch, Route, Link, useRouteMatch } from 'react-router-dom';
+import React, { useState, useRef } from 'react';
+import {
+  Switch,
+  Route,
+  Link,
+  useRouteMatch,
+  useHistory,
+} from 'react-router-dom';
 
 const Menu = () => {
   const padding = {
@@ -151,9 +157,25 @@ const App = () => {
 
   const [notification, setNotification] = useState('');
 
+  const history = useHistory();
+  const match = useRouteMatch('/anecdotes/:id');
+  const timer = useRef();
+
+  const anecdote = match
+    ? anecdotes.find((anecdote) => anecdote.id === match.params.id.toString())
+    : null;
+
+  const createNotification = (content) => {
+    clearTimeout(timer.current);
+    setNotification(`A new anecdote '${content} has been created!'`);
+    timer.current = setTimeout(() => setNotification(''), 10000);
+  };
+
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0);
     setAnecdotes(anecdotes.concat(anecdote));
+    createNotification(anecdote.content);
+    history.push('/');
   };
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id);
@@ -169,16 +191,21 @@ const App = () => {
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)));
   };
 
-  const match = useRouteMatch('/anecdotes/:id');
-
-  const anecdote = match
-    ? anecdotes.find((anecdote) => anecdote.id === match.params.id.toString())
-    : null;
-
   return (
     <>
       <h1>Software anecdotes</h1>
       <Menu />
+      {notification && (
+        <div
+          style={{
+            border: '2px solid #0b79d3',
+            margin: '1rem 0',
+            padding: '1rem',
+          }}
+        >
+          {notification}
+        </div>
+      )}
       <Switch>
         <Route path='/create'>
           <CreateNew addNew={addNew} />
