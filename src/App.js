@@ -41,10 +41,12 @@ const AnecdoteList = ({ anecdotes }) => (
 );
 
 const Anecdote = ({ anecdote }) => {
-  const { content, votes, info } = anecdote;
+  const { content, author, votes, info } = anecdote;
   return (
     <div>
-      <h2>{content}</h2>
+      <h2>
+        {content} by {author}
+      </h2>
       <p>has {votes} votes</p>
       <p>
         for more info see <a href={info}>{info}</a>
@@ -94,6 +96,10 @@ const CreateNew = (props) => {
   const author = useField('text');
   const info = useField('text');
 
+  const { reset: resetContent, ...contentProps } = content;
+  const { reset: resetAuthor, ...authorProps } = author;
+  const { reset: resetInfo, ...infoProps } = info;
+
   const handleSubmit = (e) => {
     e.preventDefault();
     props.addNew({
@@ -104,23 +110,32 @@ const CreateNew = (props) => {
     });
   };
 
+  const handleReset = () => {
+    resetContent();
+    resetAuthor();
+    resetInfo();
+  };
+
   return (
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         <div>
           content
-          <input name='content' {...content} />
+          <input name='content' {...contentProps} />
         </div>
         <div>
           author
-          <input name='author' {...author} />
+          <input name='author' {...authorProps} />
         </div>
         <div>
           url for more info
-          <input name='info' {...info} />
+          <input name='info' {...infoProps} />
         </div>
-        <button>create</button>
+        <button type='submit'>create</button>
+        <button type='button' onClick={handleReset}>
+          reset
+        </button>
       </form>
     </div>
   );
